@@ -16,7 +16,12 @@ Reference code : [DenseDepth](https://github.com/ialhashim/DenseDepth)
 - #### Use pre-trained model   
     1. Download pre-trained model weights from above download link above.
     2. Save downloaded model weights to `checkpoint` directory.
-   
+
+- #### Use jupyter notebook (example.ipynb)
+    1. Locate model weights at `checkpoin` directory.
+    2. Locate the own test image at `examples` directory.
+    3. Go to `example.ipynb`
+
 - #### Training
     - Prepare the dataset for training (we used the dataset created by DenseDepth, See [DenseDepth](https://github.com/ialhashim/DenseDepth))
     - Run following command.   
