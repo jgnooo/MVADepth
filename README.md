@@ -18,7 +18,7 @@ Reference code : [DenseDepth](https://github.com/ialhashim/DenseDepth)
     2. Save downloaded model weights to `checkpoint` directory.
 
 - #### Use jupyter notebook (example.ipynb)
-    1. Locate model weights at `checkpoin` directory.
+    1. Locate model weights at `checkpoint` directory.
     2. Locate the own test image at `examples` directory.
     3. Go to `example.ipynb`
 
