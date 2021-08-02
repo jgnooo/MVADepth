@@ -1,32 +1,51 @@
 import tensorflow as tf
 import argparse
 import math
-import time
 import os
 import matplotlib.pyplot as plt
 
 from tqdm import tqdm
+
 from networks.loss import depth_loss
 from networks.model import MVAAutoEncoder
 
 from data import NYUDataLoader
 
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '5'
-os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
 # Argument Parser
 parser = argparse.ArgumentParser(description='Monocular Depth Estimation based on AutoEncoder with Attention Model')
-parser.add_argument('--bs', type=int, default=4, help='Batch size')
-parser.add_argument('--lr', type=float, default=0.0001, help='Learning rate')
-parser.add_argument('--epochs', type=int, default=20, help='Number of epochs')
-parser.add_argument('--logs', type=str, default='./logs/', help='Tensorflow summaries')
-parser.add_argument('--ckpt', type=str, default='./checkpoint/', help='Training model checkpoints')
+
+parser.add_argument('--bs',
+                    type=int,
+                    default=4,
+                    help='Batch size.')
+parser.add_argument('--lr',
+                    type=float,
+                    default=0.0001,
+                    help='Learning rate.')
+parser.add_argument('--epochs',
+                    type=int,
+                    default=20,
+                    help='Number of epochs.')
+parser.add_argument('--logs',
+                    type=str,
+                    default='./logs/',
+                    help='Directory for tensorflow summary.')
+parser.add_argument('--ckpt',
+                    type=str,
+                    default='./checkpoint/',
+                    help='Directory for model checkpoint.')
+parser.add_argument('--gpu',
+                    type=str,
+                    default='0',
+                    help='GPU Device.')
+
 args = parser.parse_args()
 
 
 def print_model(model):
     model.build(input_shape=(None, 480, 640, 3))
-    model.summary(line_length=130)
+    model.summary(line_length=110)
 
 
 def depth_normalize(depth, max_depth=1000):
@@ -82,11 +101,11 @@ def prepare_summary(color_path, depth_path):
     return summary_color_list, summary_depth_list
 
 
-if __name__ == '__main__':
+def main():
     # For tensorboard summary image
     summary_color_list, summary_depth_list = prepare_summary('./summary_image/color/', './summary_image/depth/')
 
-    # Generate data loader
+    # Generate dataset
     train_nyu_length, train_nyu, test_nyu_length, test_nyu = loader(args.bs, '../data/nyu2_train.csv', '../data/nyu2_test.csv')
 
     # Build Model
@@ -94,18 +113,18 @@ if __name__ == '__main__':
     model = mva.build_model()
     
     print('\nModel built...')
-    print('    -> AutoEncoder with Attention model (DenseNet)')
+    print('    -> AutoEncoder with Attention model (with pre-trained DenseNet).')
 
-    # print_model(model)
+    # Print model summary
+    print_model(model)
 
     # Define optimizer
-    initial_lr = args.lr
-    lr_schedule = tf.keras.optimizers.schedules.ExponentialDecay(initial_lr,
-                                                                 decay_steps=10000,
-                                                                 decay_rate=0.7,
-                                                                 staircase=True)
-    optimizer = tf.keras.optimizers.Adam(lr_schedule)
-    
+    optimizer = tf.keras.optimizers.Adam(args.lr)
+
+    # Tensorflow summaries
+    writer = tf.summary.create_file_writer(args.logs)
+
+    @tf.function
     def train_step(rgb_batch, depth_batch):
         with tf.GradientTape() as tape:
             predictions = model(rgb_batch)
@@ -119,10 +138,6 @@ if __name__ == '__main__':
         loss = depth_loss(y_true=depth_batch, y_pred=predictions)
         return loss
 
-    # Tensorflow summaries
-    writer = tf.summary.create_file_writer(args.logs)
-    
-    # @tf.function
     def summaries(epoch, loss, valid_loss, rgbs, gts, preds):
         with writer.as_default():
             tf.summary.scalar('loss', loss, step=epoch, description='train loss')
@@ -167,3 +182,10 @@ if __name__ == '__main__':
     print('\n Training done...')
     print('    -> Model saved (./checkpoint/model.h5)')
     model.save_weights(filepath=args.ckpt + 'model.h5', save_format='h5')
+
+
+if __name__ == '__main__':
+    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '5'
+    os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu
+
+    main()
