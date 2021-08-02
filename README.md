@@ -22,14 +22,19 @@ Reference code : [DenseDepth](https://github.com/ialhashim/DenseDepth)
     2. Locate the own test image at `examples` directory.
     3. Go to `example.ipynb`
 
-- #### Training
-    - Prepare the dataset for training (we used the dataset created by DenseDepth, See [DenseDepth](https://github.com/ialhashim/DenseDepth))
+- #### Train
+    - Prepare the dataset for training. (we used the dataset created by DenseDepth, See [DenseDepth](https://github.com/ialhashim/DenseDepth))
     - Run following command.   
     ```python train.py --bs 4 --lr 0.0001 --epochs 20```
+
+- #### Test
+    - Prepare your test images in `examples` directory or your own directory.
+    - Locate model weights at `checkpoint` directory.
+    - Run following command.
+    ```python test.py --model_weights /your/own/path --gpu your_gpu```
     
 ## Results
 
 ## To-Do List
-1. Add ```test.py```
-2. Add Results
-3. Update my code
+1. Add Results
+2. Update codes
