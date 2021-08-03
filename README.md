@@ -22,6 +22,7 @@ Reference code : [DenseDepth](https://github.com/ialhashim/DenseDepth)
     2. Locate the own test image at `examples` directory.
     3. Go to `example.ipynb`
 
+## Train & Test network
 - #### Train
     - Prepare the dataset for training. (we used the dataset created by DenseDepth, See [DenseDepth](https://github.com/ialhashim/DenseDepth))
     - Run following command.   
@@ -34,7 +35,8 @@ Reference code : [DenseDepth](https://github.com/ialhashim/DenseDepth)
     ```python test.py --model_weights /your/own/path --gpu your_gpu```
     
 ## Results
-
+    ![result](https://user-images.githubusercontent.com/55485826/127944218-2c72c094-2bc6-4b15-8241-f7e36e25dbde.png)
+    
 ## To-Do List
 1. Add Results
 2. Update codes
