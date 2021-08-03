@@ -35,7 +35,7 @@ Reference code : [DenseDepth](https://github.com/ialhashim/DenseDepth)
     ```python test.py --model_weights /your/own/path --gpu your_gpu```
     
 ## Results
-<center><img src="https://user-images.githubusercontent.com/55485826/127944218-2c72c094-2bc6-4b15-8241-f7e36e25dbde.png"></center>
+<p align="center"><img src="https://user-images.githubusercontent.com/55485826/127944218-2c72c094-2bc6-4b15-8241-f7e36e25dbde.png"></p>
 <!-- ![result](https://user-images.githubusercontent.com/55485826/127944218-2c72c094-2bc6-4b15-8241-f7e36e25dbde.png) -->
 
 ## To-Do List
