@@ -1,5 +1,5 @@
 # Multi-View Attention (MVA) Monocular Depth Estimation
-Implementation of MVA monocular depth estimation.   
+Tensorflow 2 Implementation of MVA monocular depth estimation.   
 Reference code : [DenseDepth](https://github.com/ialhashim/DenseDepth)
 
 ## Requirements
@@ -36,8 +36,7 @@ Reference code : [DenseDepth](https://github.com/ialhashim/DenseDepth)
     
 ## Results
 <p align="center"><img src="https://user-images.githubusercontent.com/55485826/127944218-2c72c094-2bc6-4b15-8241-f7e36e25dbde.png"></p>
-<!-- ![result](https://user-images.githubusercontent.com/55485826/127944218-2c72c094-2bc6-4b15-8241-f7e36e25dbde.png) -->
 
 ## To-Do List
-1. Add Results
-2. Update codes
+1. Update codes
+2. Add quantitative evaluation 
