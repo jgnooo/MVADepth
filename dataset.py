@@ -31,6 +31,7 @@ class NYUDataLoader():
 
         return nyu_list
 
+    # Data augmentation : https://github.com/cogaplex-bts/bts
     def augment(self, img):        
         # Gamma augmentation
         gamma = tf.random.uniform([], 0.9, 1.1)
@@ -65,7 +66,7 @@ class NYUDataLoader():
             depth = tf.clip_by_value(depth * self.max_depth, self.min_depth, self.max_depth)
             depth = self.max_depth / depth
 
-            # Data Augmentation
+            # Data Augmentation : https://github.com/cogaplex-bts/bts
             # Random flipping
             flip = tf.random.uniform([], 0, 1)
             rgb = tf.cond(flip > 0.5, lambda: tf.image.flip_left_right(rgb), lambda: rgb)
@@ -85,10 +86,27 @@ class NYUDataLoader():
 
     def get_batched_dataset(self):
         self.dataset = tf.data.Dataset.from_tensor_slices((self.rgbs, self.depths))
-        self.dataset = self.dataset.shuffle(buffer_size=len(self.rgbs), reshuffle_each_iteration=True)
-        # self.dataset = self.dataset.repeat()
-        self.dataset = self.dataset.map(map_func=self.preprocess_dataset, num_parallel_calls=tf.data.experimental.AUTOTUNE)
+        self.dataset = self.dataset.shuffle(buffer_size=len(self.rgbs),
+                                            reshuffle_each_iteration=True)
+        self.dataset = self.dataset.map(map_func=self.preprocess_dataset,
+                                        num_parallel_calls=tf.data.experimental.AUTOTUNE)
         self.dataset = self.dataset.batch(batch_size=self.batch_size)
 
         return self.dataset
-    
+
+
+def loader(batch_size, train_path, test_path):
+    # Load NYU Dataset
+    train_nyu_loader = NYUDataLoader(batch_size, train_path, FLAG='train')
+    train_nyu_length = train_nyu_loader.get_dataset_size()
+    train_nyu = train_nyu_loader.get_batched_dataset()
+
+    test_nyu_loader = NYUDataLoader(batch_size, test_path, FLAG='test')
+    test_nyu_length = test_nyu_loader.get_dataset_size()
+    test_nyu = test_nyu_loader.get_batched_dataset()
+
+    print('\nData loaded...')
+    print('    --> train dataset : {}'.format(train_nyu_length))
+    print('    --> test dataset : {}'.format(test_nyu_length))
+
+    return train_nyu_length, train_nyu, test_nyu_length, test_nyu

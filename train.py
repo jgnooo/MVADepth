@@ -9,7 +9,8 @@ from tqdm import tqdm
 from networks.loss import depth_loss
 from networks.model import MVAAutoEncoder
 
-from data import NYUDataLoader
+import dataset
+import utils
 
 
 # Argument Parser
@@ -43,40 +44,6 @@ parser.add_argument('--gpu',
 args = parser.parse_args()
 
 
-def print_model(model):
-    model.build(input_shape=(None, 480, 640, 3))
-    model.summary(line_length=110)
-
-
-def depth_normalize(depth, max_depth=1000):
-    return max_depth / depth
-
-
-def visualize(tensor):
-    plasma = plt.get_cmap('plasma')
-    img = tf.reshape(tensor, [3, 240, 320])
-    img = tf.clip_by_value(depth_normalize(img), 10, 1000) / 1000
-    img = plasma(img)[:, :, :, :3]
-    return img
-
-
-def loader(batch_size, train_path, test_path):
-    # Data Loader
-    train_nyu_loader = NYUDataLoader(batch_size, train_path, FLAG='train')
-    train_nyu_length = train_nyu_loader.get_dataset_size()
-    train_nyu = train_nyu_loader.get_batched_dataset()
-
-    test_nyu_loader = NYUDataLoader(batch_size, test_path, FLAG='test')
-    test_nyu_length = test_nyu_loader.get_dataset_size()
-    test_nyu = test_nyu_loader.get_batched_dataset()
-
-    print('\nData loaded...')
-    print('    --> train dataset : {}'.format(train_nyu_length))
-    print('    --> test dataset : {}'.format(test_nyu_length))
-
-    return train_nyu_length, train_nyu, test_nyu_length, test_nyu
-
-
 def prepare_summary(color_path, depth_path):
     color_list = os.listdir(color_path)
     depth_list = os.listdir(depth_path)
@@ -106,7 +73,7 @@ def main():
     summary_color_list, summary_depth_list = prepare_summary('./summary_image/color/', './summary_image/depth/')
 
     # Generate dataset
-    train_nyu_length, train_nyu, test_nyu_length, test_nyu = loader(args.bs, '../data/nyu2_train.csv', '../data/nyu2_test.csv')
+    train_nyu_length, train_nyu, test_nyu_length, test_nyu = dataset.loader(args.bs, '../data/nyu2_train.csv', '../data/nyu2_test.csv')
 
     # Build Model
     mva = MVAAutoEncoder()
@@ -116,7 +83,7 @@ def main():
     print('    -> AutoEncoder with Attention model (with pre-trained DenseNet).')
 
     # Print model summary
-    print_model(model)
+    utils.print_model(model)
 
     # Define optimizer
     optimizer = tf.keras.optimizers.Adam(args.lr)
@@ -140,11 +107,26 @@ def main():
 
     def summaries(epoch, loss, valid_loss, rgbs, gts, preds):
         with writer.as_default():
-            tf.summary.scalar('loss', loss, step=epoch, description='train loss')
-            tf.summary.scalar('valid_loss', valid_loss, step=epoch, description='valid loss')
-            tf.summary.image('rgbs', rgbs, step=epoch, description='RGB image')
-            tf.summary.image('gts', visualize(gts), step=epoch, description='Ground truth depth')
-            tf.summary.image('preds', visualize(preds), step=epoch, description='Predicted depth')
+            tf.summary.scalar('Train Loss',
+                              loss,
+                              step=epoch,
+                              description='train loss')
+            tf.summary.scalar('Valid Loss',
+                              valid_loss,
+                              step=epoch,
+                              description='valid loss')
+            tf.summary.image('RGB images',
+                             rgbs,
+                             step=epoch,
+                             description='RGB image')
+            tf.summary.image('Ground-truths',
+                             utils.visualize(gts),
+                             step=epoch,
+                             description='Ground truth depth')
+            tf.summary.image('Predicted Depths',
+                             utils.visualize(preds),
+                             step=epoch,
+                             description='Predicted depth')
 
     # Start training
     print('\nTraining start...')
@@ -162,9 +144,9 @@ def main():
             valid_loss = valid_step(rgbs, depths)
 
         print("Epoch: {}/{}, train_loss: {:.5f}, valid_loss: {:.5f}".format(epoch,
-                                                                           args.epochs,
-                                                                           train_loss,
-                                                                           valid_loss))
+                                                                            args.epochs,
+                                                                            train_loss,
+                                                                            valid_loss))
 
         summaries(epoch, 
                   train_loss, 
