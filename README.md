@@ -39,6 +39,3 @@ Reference code : [DenseDepth](https://github.com/ialhashim/DenseDepth)
     
 ## Results
 <p align="center"><img src="https://user-images.githubusercontent.com/55485826/127944218-2c72c094-2bc6-4b15-8241-f7e36e25dbde.png"></p>
-
-## To-Do List
-- Update codes
