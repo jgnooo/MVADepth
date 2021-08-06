@@ -12,6 +12,9 @@ Reference code : [DenseDepth](https://github.com/ialhashim/DenseDepth)
 ## Pre-trained model
 * [Trained by NYU RGB-D V2](https://drive.google.com/uc?export=download&id=1k8McRE2vOtrkHmG9ZU6Cd-IUDtr2Fbbv) (650 MB)
 
+## Dataset
+- We use NYU Detph V2 dataset and refer to DenseDepth, See [DenseDepth](https://github.com/ialhashim/DenseDepth) Data section
+
 ## Usage
 - #### Use pre-trained model   
     1. Download pre-trained model weights from above download link above.
@@ -24,7 +27,7 @@ Reference code : [DenseDepth](https://github.com/ialhashim/DenseDepth)
 
 ## Train & Test network
 - #### Train
-    - Prepare the dataset for training. (we used the dataset created by DenseDepth, See [DenseDepth](https://github.com/ialhashim/DenseDepth))
+    - Prepare the dataset for training. (we used the NYU V2 dataset)
     - Run following command.   
     ```python train.py --bs 4 --lr 0.0001 --epochs 20```
 
@@ -38,5 +41,4 @@ Reference code : [DenseDepth](https://github.com/ialhashim/DenseDepth)
 <p align="center"><img src="https://user-images.githubusercontent.com/55485826/127944218-2c72c094-2bc6-4b15-8241-f7e36e25dbde.png"></p>
 
 ## To-Do List
-1. Update codes
-2. Add quantitative evaluation 
+- Update codes
