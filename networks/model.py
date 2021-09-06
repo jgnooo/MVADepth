@@ -32,17 +32,17 @@ class MVAAutoEncoder():
         for layer in self.encoder.layers:
             layer.trainable = True
 
-        self.decoder_block1 = DecoderBlock(int(self.filters / 2))
-        self.decoder_block2 = DecoderBlock(int(self.filters / 4))
-        self.decoder_block3 = DecoderBlock(int(self.filters / 8))
-        self.decoder_block4 = DecoderBlock(int(self.filters / 16))
+        self.decoder_block1 = DecoderBlock(int(self.filters // 2))
+        self.decoder_block2 = DecoderBlock(int(self.filters // 4))
+        self.decoder_block3 = DecoderBlock(int(self.filters // 8))
+        self.decoder_block4 = DecoderBlock(int(self.filters // 16))
 
     def residual_block(self, input_tensor, filters, is_perm=False):
-        x = tf.keras.layers.Conv2D(filters=int(filters / 2), kernel_size=3, strides=1, padding='same')(input_tensor)
+        x = tf.keras.layers.Conv2D(filters=int(filters // 2), kernel_size=3, strides=1, padding='same')(input_tensor)
         x = tf.keras.layers.BatchNormalization()(x)
         x = tf.nn.relu(x)
         
-        x = tf.keras.layers.Conv2D(filters=int(filters / 2), kernel_size=3, strides=1, padding='same')(x)
+        x = tf.keras.layers.Conv2D(filters=int(filters // 2), kernel_size=3, strides=1, padding='same')(x)
         x = tf.keras.layers.BatchNormalization()(x)
         x = tf.nn.relu(x)
 
@@ -84,20 +84,20 @@ class MVAAutoEncoder():
              
         # Decoder
         x = self.decoder_block1(x)
-        x = self.residual_block(x, int(self.filters / 2))
-        x = self.multi_view_attention(x, int(self.filters / 2), self.encoder.get_layer('pool3_pool').output)
+        x = self.residual_block(x, int(self.filters // 2))
+        x = self.multi_view_attention(x, int(self.filters // 2), self.encoder.get_layer('pool3_pool').output)
 
         x = self.decoder_block2(x)
-        x = self.residual_block(x, int(self.filters / 4))
-        x = self.multi_view_attention(x, int(self.filters / 4), self.encoder.get_layer('pool2_pool').output)
+        x = self.residual_block(x, int(self.filters // 4))
+        x = self.multi_view_attention(x, int(self.filters // 4), self.encoder.get_layer('pool2_pool').output)
 
         x = self.decoder_block3(x)
-        x = self.residual_block(x, int(self.filters / 8))
-        x = self.multi_view_attention(x, int(self.filters / 8), self.encoder.get_layer('pool1').output)
+        x = self.residual_block(x, int(self.filters // 8))
+        x = self.multi_view_attention(x, int(self.filters // 8), self.encoder.get_layer('pool1').output)
 
         x = self.decoder_block4(x)
-        x = self.residual_block(x, int(self.filters / 16))
-        x = self.multi_view_attention(x, int(self.filters / 16), self.encoder.get_layer('conv1/relu').output)
+        x = self.residual_block(x, int(self.filters // 16))
+        x = self.multi_view_attention(x, int(self.filters // 16), self.encoder.get_layer('conv1/relu').output)
 
         # Last conv
         x = tf.keras.layers.Conv2D(filters=1, kernel_size=3, strides=1, padding='same')(x)
