@@ -7,6 +7,7 @@ Reference code : [DenseDepth](https://github.com/ialhashim/DenseDepth)
 - Numpy
 - Pilow
 - Matplotlib
+- Scikit-image 0.15.0
 - tqdm
 
 ## Pre-trained model
