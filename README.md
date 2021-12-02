@@ -24,7 +24,7 @@ Reference code : [DenseDepth](https://github.com/ialhashim/DenseDepth)
 - #### Use jupyter notebook (example.ipynb)
     1. Make direcotry `checkpoints` directory.
     2. Locate model weights at `checkpoints` directory.
-    3. Locate the own test image at `examples` directory.
+    3. Locate the own test images at `examples` directory.
     4. Go to `example.ipynb`
 
 ## Train & Test network
