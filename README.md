@@ -18,12 +18,13 @@ Reference code : [DenseDepth](https://github.com/ialhashim/DenseDepth)
 ## Usage
 - #### Use pre-trained model   
     1. Download pre-trained model weights from above download link above.
-    2. Save downloaded model weights to `checkpoint` directory.
+    2. Save downloaded model weights to `checkpoints` directory or `your_own_path`.
 
 - #### Use jupyter notebook (example.ipynb)
-    1. Locate model weights at `checkpoint` directory.
-    2. Locate the own test image at `examples` directory.
-    3. Go to `example.ipynb`
+    1. Make direcotry `checkpoints` directory.
+    2. Locate model weights at `checkpoints` directory.
+    3. Locate the own test image at `examples` directory.
+    4. Go to `example.ipynb`
 
 ## Train & Test network
 - #### Train
@@ -33,9 +34,9 @@ Reference code : [DenseDepth](https://github.com/ialhashim/DenseDepth)
 
 - #### Test
     - Prepare your test images in `examples` directory or your own directory.
-    - Locate model weights at `checkpoint` directory.
+    - Locate model weights at `checkpoints` directory.
     - Run following command.   
-    ```python test.py --model_weights /your/own/path --gpu your_gpu```
+    ```python test.py --model_weights /your/own/path --images_dir /your/own/path --results_dir /your/own/path --gpu your_gpu_number```
     
 ## Results
 <p align="center"><img src="https://user-images.githubusercontent.com/55485826/127944218-2c72c094-2bc6-4b15-8241-f7e36e25dbde.png"></p>
