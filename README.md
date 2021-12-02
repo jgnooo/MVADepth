@@ -34,9 +34,16 @@ Reference code : [DenseDepth](https://github.com/ialhashim/DenseDepth)
 
 - #### Test
     - Prepare your test images in `examples` directory or your own directory.
+    - Make `checkpoints` directory.
     - Locate model weights at `checkpoints` directory.
     - Run following command.   
-    ```python test.py --model_weights /your/own/path --images_dir /your/own/path --results_dir /your/own/path --gpu your_gpu_number```
+    ```
+    python test.py \
+        --model_weights /your/own/path \
+        --images_dir /your/own/path \
+        --results_dir /your/own/path \
+        --gpu your_gpu_number
+    ```
     
 ## Results
 <p align="center"><img src="https://user-images.githubusercontent.com/55485826/127944218-2c72c094-2bc6-4b15-8241-f7e36e25dbde.png"></p>
