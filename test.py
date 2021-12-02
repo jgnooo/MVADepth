@@ -1,5 +1,4 @@
 import tensorflow as tf
-tf.enable_eager_execution()
 import numpy as np
 import argparse
 import os
@@ -13,8 +12,16 @@ parser = argparse.ArgumentParser(description='Monocular Depth Estimation based o
 
 parser.add_argument('--model_weights',
                     type=str,
-                    default='./checkpoint/model.h5',
+                    default='./checkpoints/model.h5',
                     help='Model weights path.')
+parser.add_argument('--images_dir',
+                    type=str,
+                    default='./examples/',
+                    help='Test images directory.')
+parser.add_argument('--results_dir',
+                    type=str,
+                    default='./results/',
+                    help='Output images directory.')
 parser.add_argument('--gpu',
                     type=str,
                     default='0',
@@ -55,14 +62,16 @@ def visualize_depth(depth):
 
 def main():
     # image_dir can change to your own directory.
-    image_dir = './examples'
-    image_list = os.listdir('./examples')
+    image_dir = args.images_dir
+    image_list = os.listdir(image_dir)
+
+    results_dir = args.results_dir
 
     # Build model and Load model weights
     print('Load MVA Network...')
     net = MVAAutoEncoder()
     model = net.build_model()
-    model.load_weights('./checkpoint/model.h5')
+    model.load_weights(args.model_weights)
 
     for image_name in image_list:
         path = os.path.join(image_dir, image_name)
@@ -86,7 +95,10 @@ def main():
         pred_depth = pred_depth.numpy()
         
         visual_depth = visualize_depth(pred_depth)
-        Image.fromarray(visual_depth).save('./results/{}.png'.format(image_name.split('.')[0] + '_depth'))
+
+        # Save result depth image
+        output_path = os.path.join(results_dir, './{}.png'.format(image_name.split('.')[0] + '_depth'))
+        Image.fromarray(visual_depth).save(output_path)
 
 
 if __name__ == "__main__":
