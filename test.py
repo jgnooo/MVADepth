@@ -66,6 +66,8 @@ def main():
     image_list = os.listdir(image_dir)
 
     results_dir = args.results_dir
+    if not os.path.exists(results_dir):
+        os.makedirs(results_dir, exist_ok=True)
 
     # Build model and Load model weights
     print('Load MVA Network...')
